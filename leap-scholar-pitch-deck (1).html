@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leap Scholar — Community Strategy</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f5f0e8;
+    --gold: #c8973a;
+    --gold-light: #e8c97a;
+    --deep: #1a1a2e;
+    --muted: #6b6460;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background:#0e0e0e;
+    font-family:'DM Sans',sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:32px 16px 80px;
+    gap:0;
+  }
+
+  /* TOPBAR */
+  #topbar {
+    width:800px;
+    background:rgba(14,14,14,0.96);
+    backdrop-filter:blur(12px);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:13px 22px;
+    border-bottom:1px solid rgba(200,151,58,0.25);
+    position:sticky; top:0; z-index:100;
+  }
+  .brand { font-family:'Cormorant Garamond',serif; font-size:15px; color:var(--cream); letter-spacing:.8px; }
+  .brand span { color:var(--gold); }
+  #slide-lbl { font-size:11px; color:rgba(255,255,255,0.3); letter-spacing:1px; }
+  #pbar-wrap { width:800px; height:2px; background:rgba(255,255,255,0.06); position:sticky; top:49px; z-index:99; }
+  #pbar { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-light)); width:10%; transition:width .4s; }
+
+  /* SLIDE */
+  .slide { width:800px; height:1000px; position:relative; overflow:hidden; display:none; }
+  .slide.active { display:block; }
+  .inner { width:100%; height:100%; padding:62px 58px; display:flex; flex-direction:column; justify-content:center; position:relative; }
+  .s-dark  { background:var(--deep); }
+  .s-light { background:var(--cream); }
+
+  /* Orb */
+  .orb { position:absolute; border-radius:50%; pointer-events:none; }
+
+  /* Gold bars */
+  .gbar { position:absolute; left:0; bottom:0; width:100%; height:3px; background:linear-gradient(90deg,var(--gold),transparent); }
+  .gbar-top { bottom:auto; top:0; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+
+  /* Typography */
+  .lbl { font-size:9px; letter-spacing:3px; text-transform:uppercase; color:var(--gold); margin-bottom:14px; }
+  h1.disp {
+    font-family:'Cormorant Garamond',serif;
+    font-size:60px; font-weight:300; line-height:1.08;
+    color:var(--cream); margin-bottom:24px;
+  }
+  h1.disp em { font-style:italic; color:var(--gold-light); }
+  h2.hd {
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px; font-weight:300; line-height:1.12;
+    color:var(--cream); margin-bottom:30px;
+  }
+  h2.hd em { font-style:italic; color:var(--gold-light); }
+  h2.hl {
+    font-family:'Cormorant Garamond',serif;
+    font-size:42px; font-weight:400; line-height:1.12;
+    color:var(--deep); margin-bottom:30px;
+  }
+  h2.hl em { font-style:italic; color:var(--gold); }
+  .sub { font-size:14px; font-weight:300; line-height:1.75; color:rgba(245,240,232,0.5); max-width:480px; }
+  .snum { position:absolute; bottom:34px; right:54px; font-family:'Cormorant Garamond',serif; font-size:12px; color:rgba(200,151,58,0.3); letter-spacing:1px; }
+  .gdiv { width:44px; height:1px; background:var(--gold); margin-bottom:26px; }
+
+  /* Bullets */
+  .bl { list-style:none; }
+  .bl li { font-size:13px; font-weight:300; line-height:1.6; padding:9px 0 9px 18px; border-bottom:1px solid rgba(200,151,58,0.1); position:relative; color:rgba(245,240,232,0.72); }
+  .bl li::before { content:'—'; position:absolute; left:0; top:11px; color:var(--gold); font-size:9px; }
+  .bl.lt li { color:var(--muted); border-color:rgba(26,26,46,0.1); }
+  .bl.lt li::before { color:var(--gold); }
+
+  /* Cards dark */
+  .cd { padding:20px 18px; border:1px solid rgba(200,151,58,0.2); background:rgba(200,151,58,0.04); }
+  .cd .ct { font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--cream); margin:8px 0 5px; font-weight:400; }
+  .cd .cb { font-size:11.5px; color:rgba(245,240,232,0.5); line-height:1.65; font-weight:300; }
+  .cd .ci { font-size:19px; }
+
+  /* Cards light */
+  .cl { padding:18px; border:1px solid rgba(26,26,46,0.1); background:#fff; }
+  .cl .ct { font-family:'Cormorant Garamond',serif; font-size:16px; color:var(--deep); margin-bottom:5px; }
+  .cl .cb { font-size:11.5px; color:var(--muted); line-height:1.65; font-weight:300; }
+
+  /* Stats */
+  .stats { display:flex; margin-bottom:30px; }
+  .st { flex:1; border-left:1px solid rgba(200,151,58,0.25); padding:0 20px; }
+  .st:first-child { padding-left:0; border:none; }
+  .sn { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:300; color:var(--gold); line-height:1; margin-bottom:5px; }
+  .sl { font-size:11.5px; color:rgba(245,240,232,0.45); font-weight:300; line-height:1.5; }
+
+  /* Grids */
+  .g2 { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  .g4 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+
+  /* Metrics */
+  .mr { display:flex; align-items:center; gap:18px; padding:12px 0; border-bottom:1px solid rgba(200,151,58,0.1); }
+  .mn { font-family:'Cormorant Garamond',serif; font-size:38px; font-weight:300; color:var(--gold); min-width:100px; line-height:1; }
+  .ml { font-size:12.5px; color:var(--muted); font-weight:300; }
+
+  /* Events */
+  .er { display:flex; gap:18px; padding:13px 0; border-bottom:1px solid rgba(26,26,46,0.08); }
+  .ef { width:90px; flex-shrink:0; font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--gold); padding-top:3px; }
+  .et { font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--deep); margin-bottom:3px; }
+  .ed { font-size:12px; color:var(--muted); font-weight:300; line-height:1.5; }
+
+  /* Win cards */
+  .wc { padding:18px 20px; border-left:2px solid var(--gold); background:rgba(200,151,58,0.05); }
+  .wt { font-family:'Cormorant Garamond',serif; font-size:17px; color:var(--cream); margin-bottom:5px; }
+  .wb { font-size:11.5px; color:rgba(245,240,232,0.5); line-height:1.6; font-weight:300; }
+
+  /* Quote */
+  .qb { margin-top:26px; padding:15px 20px; border:1px solid rgba(200,151,58,0.3); background:rgba(200,151,58,0.07); display:inline-block; }
+  .qb p { font-family:'Cormorant Garamond',serif; font-size:15px; font-style:italic; color:var(--gold-light); }
+
+  /* Arc */
+  .ai { display:flex; align-items:center; gap:13px; padding:8px 0; border-bottom:1px solid rgba(200,151,58,0.1); }
+  .an { width:23px; height:23px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:'Cormorant Garamond',serif; font-size:11px; font-weight:600; color:var(--gold); }
+  .ati { font-size:12.5px; color:var(--cream); margin-bottom:2px; }
+  .as { font-size:11px; color:rgba(245,240,232,0.4); }
+
+  /* NAV */
+  #nav { position:fixed; bottom:22px; display:flex; align-items:center; gap:14px; z-index:200; }
+  .nb { background:rgba(14,14,14,0.92); border:1px solid rgba(200,151,58,0.35); color:rgba(255,255,255,0.7); padding:9px 26px; font-family:'DM Sans',sans-serif; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; cursor:pointer; transition:all .2s; backdrop-filter:blur(10px); }
+  .nb:hover { border-color:var(--gold); color:var(--gold); }
+  #ctr { font-family:'Cormorant Garamond',serif; font-size:14px; color:rgba(255,255,255,0.4); min-width:52px; text-align:center; }
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="brand">Leap <span>Scholar</span> &nbsp;·&nbsp; Community Strategy 2025</div>
+  <div id="slide-lbl">SLIDE 1 OF 10</div>
+</div>
+<div id="pbar-wrap"><div id="pbar"></div></div>
+
+<!-- ───────── SLIDE 1: COVER ───────── -->
+<div class="slide active">
+  <div class="inner s-dark" style="justify-content:flex-end;padding-bottom:88px;">
+    <div class="orb" style="right:-100px;top:-100px;width:540px;height:540px;background:radial-gradient(circle,rgba(200,151,58,0.14) 0%,transparent 70%);"></div>
+    <div class="orb" style="left:-50px;bottom:-50px;width:280px;height:280px;background:radial-gradient(circle,rgba(200,151,58,0.07) 0%,transparent 70%);"></div>
+    <div style="position:absolute;bottom:70px;right:52px;font-family:'Cormorant Garamond',serif;font-size:160px;font-weight:300;color:rgba(200,151,58,0.04);line-height:1;pointer-events:none;">01</div>
+    <div class="lbl" style="margin-bottom:22px;">Community Strategy · 2025</div>
+    <h1 class="disp">Building the<br><em>#1 Community</em><br>for Abroad-Aspiring<br>Families</h1>
+    <p class="sub">Turning the Leap Scholar app forum into a high-trust, high-engagement ecosystem for India's most discerning parents.</p>
+    <div class="gbar"></div>
+    <div class="snum">01 / 10</div>
+  </div>
+</div>
+
+<!-- ───────── SLIDE 2: OPPORTUNITY ───────── -->
+<div class="slide">
+  <div class="inner s-dark">
+    <div class="orb" style="right:-80px;bottom:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(200,151,58,0.1) 0%,transparent 70%);"></div>
+    <div class="lbl">The Opportunity</div>
+    <h2 class="hd">The community is the <em>missing layer</em></h2>
+    <div class="stats">
+      <div class="st"><div class="sn">1.3M+</div><div class="sl">Indian students go abroad annually</div></div>
+      <div class="st"><div class="sn">₹80L+</div><div class="sl">Avg annual family spend on abroad education</div></div>
+      <div class="st"><div class="sn">78%</div><div class="sl">Parents who trust peer recommendations over brands</div></div>
+    </div>
+    <ul class="bl">
+      <li>High-end parents are deeply underserved — they want curated, credible, peer-driven guidance</li>
+      <li>Existing platforms offer information but zero community trust</li>
+      <li>Leap Scholar has the app, the audience, and the counseling infrastructure</li>
+      <li>The forum is live — but its full potential is completely untapped</li>
+    </ul>
+    <div class="gbar gbar-top"></div>
+    <div class="snum">02 / 10</div>
+  </div>
+</div>
+
+<!-- ───────── SLIDE 3: WHO WE'RE BUILDING FOR ───────── -->
+<div class="slide">
+  <div class="inner s-light">
+    <div class="lbl">Target Audience</div>
+    <h2 class="hl">Who we're <em>building for</em></h2>
+    <div class="gdiv"></div>
+    <div class="g2" style="align-items:start;gap:24px;">
+      <ul class="bl lt">
+        <li>Affluent Indian parents — HNI &amp; Upper Middle Class</li>
+        <li>Children aged 16–22, targeting US, UK, Canada, Australia</li>
+        <li>Research-driven — have already read 50 threads online</li>
+        <li>Trust peer validation far more than any brand messaging</li>
+        <li>Active on WhatsApp, LinkedIn, and curated forums — not mass social media</li>
+        <li>Already in fragmented WhatsApp groups — Leap Scholar can be their curated home</li>
+      </ul>
+      <div style="display:flex;flex-direction:column;gap:13px;">
+        <div class="cl"><div class="ct">🎯 What they want</div><div class="cb">Real visa success stories, authentic school comparisons, ROI on tuition, and access to families who've already navigated the journey.</div></div>
+        <div class="cl"><div class="ct">💡 What they're missing</div><div class="cb">A safe, moderated, high-signal community — free from noise, spam, and unqualified advice.</div></div>
+        <div class="cl"><div class="ct">📍 Where they are now</div><div class="cb">Scattered across WhatsApp groups with no structure. Craving a trusted, curated platform.</div></div>
+      </div>
+    </div>
+    <div class="snum" style="color:rgba(26,26,46,0.2);">03 / 10</div>
+  </div>
+</div>
+
+<!-- ───────── SLIDE 4: PILLARS ───────── -->
+<div class="slide">
+  <div class="inner s-dark">
+    <div class="orb" style="left:-60px;top:-60px;width:320px;height:320px;background:radial-gradient(circle,rgba(200,151,58,0.08) 0%,transparent 70%);"></div>
+    <div class="lbl">Strategy Framework</div>
+    <h2 class="hd">Four <em>pillars</em> of the community</h2>
+    <div class="g2">
+      <div class="cd"><div class="ci">💬</div><div class="ct">Engagement</div><div class="cb">Structured discussions, weekly AMAs, themed prompts, and parent success stories that generate daily visits and genuine connections.</div></div>
+      <div class="cd"><div class="ci">🔁</div><div class="ct">Retention</div><div class="cb">Milestone-based journey tracking tied to community touchpoints across the entire 18–24 month study-abroad lifecycle.</div></div>
+      <div class="cd"><div class="ci">🎓</div><div class="ct">Events</div><div class="cb">Exclusive school fairs, university rep sessions, city meetups, and a flagship annual Parent Summit with 500+ families.</div></div>
+      <div class="cd"><div class="ci">👥</div><div class="ct">Peer Circles</div><div class="cb">Cohort-based parent groups by destination country or intake year — a trusted tribe for the whole journey.</div></div>
+    </div>
+    <div class="gbar"></div>
+    <div class="snum">04 / 10</div>
+  </div>
+</div>
+
+<!-- ───────── SLIDE 5: ENGAGEMENT ───────── -->
+<div class="slide">
+  <div class="inner s-light">
+    <div class="lbl">Pillar 1</div>
+    <h2 class="hl"><em>Engagement</em> Strategy</h2>
+    <div class="gdiv"></div>
+    <div class="g2" style="align-items:start;gap:24px;">
+      <ul class="bl lt">
+        <li><strong>Weekly themed discussions</strong> — Visa tips, scholarship stories, destination spotlights</li>
+        <li><strong>Parent AMAs</strong> — Families whose kids study abroad share their real journey</li>
+        <li><strong>Expert office hours</strong> — Counselors, visa officers, finance advisors go live weekly</li>
+        <li><strong>Milestone posts</strong> — "Got my I-20!", "Visa approved!" celebrated in the community</li>
+        <li><strong>Gamified participation</strong> — Badges, leaderboards, monthly top parent recognition</li>
+      </ul>
+      <div style="display:flex;flex-direction:column;gap:13px;">
+        <div style="padding:16px 18px;background:#fff;border-left:3px solid var(--gold);">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--deep);margin-bottom:5px;">Daily Active Habit</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;">Something new every day — a question, a story, a live session. Parents return because there's always signal, never noise.</div>
+        </div>
+        <div style="padding:16px 18px;background:#fff;border-left:3px solid rgba(200,151,58,0.4);">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--deep);margin-bottom:5px;">Editorial Content Calendar</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;">Structured weekly themes ensure the forum never goes cold. Content planning built in from day one.</div>
+        </div>
+        <div style="padding:16px 18px;background:#fff;border-left:3px solid rgba(200,151,58,0.2);">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:15px;color:var(--deep);margin-bottom:5px;">UGC Loop</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;">Prompt parents to share their journey. One parent's post becomes another's inspiration. Community feeds itself.</div>
+        </div>
+      </div>
+    </div>
+    <div class="snum" style="color:rgba(26,26,46,0.2);">05 / 10</div>
+  </div>
+</div>
+
+<!-- ───────── SLIDE 6: RETENTION ───────── -->
+<div class="slide">
+  <div class="inner s-dark">
+    <div class="orb" style="right:-80px;top:-80px;width:380px;height:380px;background:radial-gradient(circle,rgba(200,151,58,0.1) 0%,transparent 70%);"></div>
+    <div class="lbl">Pillar 2</div>
+    <h2 class="hd"><em>Retention</em> Strategy</h2>
+    <div class="g2" style="align-items:start;gap:32px;">
+      <ul class="bl">
+        <li>Community becomes the spine of the Leap Scholar app experience</li>
+        <li>Push notifications tied to community milestones — not just product nudges</li>
+        <li>Re-engagement: <em style="color:var(--gold-light);">"Parents like you are discussing SAT prep right now"</em></li>
+        <li>Cohort communities evolve with the student — shortlisting to landing abroad</li>
+        <li>Personalised feed: destination country, intake year, student profile</li>
+      </ul>
+      <div>
+        <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:14px;">The Journey Arc</div>
+        <div id="arc"></div>
+      </div>
+    </div>
+    <div class="gbar"></div>
+    <div class="snum">06 / 10</div>
+  </div>
+</div>
+
+<!-- ───────── SLIDE 7: EVENTS ───────── -->
+<div class="slide">
+  <div class="inner s-light">
+    <div class="lbl">Pillar 3</div>
+    <h2 class="hl"><em>Events</em> Calendar</h2>
+    <div class="g2" style="align-items:start;gap:36px;">
+      <div>
+        <div class="er"><div class="ef">Monthly</div><div><div class="et">Virtual University Spotlights</div><div class="ed">Admissions reps from top global universities — QnA, scholarships, intake updates</div></div></div>
+        <div class="er"><div class="ef">Quarterly</div><div><div class="et">City Parent Meetups</div><div class="ed">Delhi · Mumbai · Bangalore · Hyderabad — curated in-person networking for families at similar stages</div></div></div>
+        <div class="er"><div class="ef">Annual</div><div><div class="et">Leap Scholar Parent Summit</div><div class="ed">Flagship 500+ family event — speakers, school stalls, alumni panels, community celebration</div></div></div>
+        <div class="er" style="border:none;"><div class="ef">On-Demand</div><div><div class="et">Coaching Workshops</div><div class="ed">Essays, SAT / IELTS / TOEFL prep, financial planning — always available, always relevant</div></div></div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;padding:44px 36px;border:1px solid rgba(200,151,58,0.25);background:rgba(200,151,58,0.04);">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:80px;font-weight:300;color:var(--gold);line-height:1;">24+</div>
+          <div style="font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-top:10px;">Touchpoints per year<br>per family</div>
+        </div>
+      </div>
+    </div>
+    <div class="snum" style="color:rgba(26,26,46,0.2);">07 / 10</div>
+  </div>
+</div>
+
+<!-- ───────── SLIDE 8: PARTNERSHIPS ───────── -->
+<div class="slide">
+  <div class="inner s-dark">
+    <div class="orb" style="left:-60px;bottom:-60px;width:360px;height:360px;background:radial-gradient(circle,rgba(200,151,58,0.09) 0%,transparent 70%);"></div>
+    <div class="lbl">Pillar 4</div>
+    <h2 class="hd">Partnership <em>Ecosystem</em></h2>
+    <div class="g2">
+      <div class="cd"><div class="ci">🏛️</div><div class="ct">Universities</div><div class="cb">Exclusive early access for Leap Scholar community members. Schools gain a pre-qualified, high-intent audience — a true win-win.</div></div>
+      <div class="cd"><div class="ci">📚</div><div class="ct">Test Prep</div><div class="cb">Discounted SAT, IELTS, TOEFL coaching. Community-exclusive pricing and cohort batches for Leap Scholar families.</div></div>
+      <div class="cd"><div class="ci">💰</div><div class="ct">Finance Partners</div><div class="cb">Education loan providers and forex partners host community webinars — trusted, deeply relevant to the family journey.</div></div>
+      <div class="cd"><div class="ci">🌏</div><div class="ct">Alumni Network</div><div class="cb">Connect aspiring families with Indian students already at top universities abroad. Authentic peer mentorship at scale.</div></div>
+    </div>
+    <div class="gbar"></div>
+    <div class="snum">08 / 10</div>
+  </div>
+</div>
+
+<!-- ───────── SLIDE 9: METRICS ───────── -->
+<div class="slide">
+  <div class="inner s-light">
+    <div class="lbl">Success Metrics</div>
+    <h2 class="hl">How we measure <em>impact</em></h2>
+    <div class="g2" style="align-items:start;gap:32px;">
+      <div>
+        <div class="mr"><div class="mn">35%+</div><div><div class="ml">DAU/MAU on the community forum</div><div style="font-size:11px;color:#aaa;margin-top:2px;">Industry benchmark: 10–15%</div></div></div>
+        <div class="mr"><div class="mn">4.5+</div><div><div class="ml">Event NPS score (out of 5)</div><div style="font-size:11px;color:#aaa;margin-top:2px;">Measured post every event</div></div></div>
+        <div class="mr"><div class="mn">3×</div><div><div class="ml">Referral rate: community vs non-community</div><div style="font-size:11px;color:#aaa;margin-top:2px;">Tracked via community invite codes</div></div></div>
+        <div class="mr" style="border:none;"><div class="mn">2×</div><div><div class="ml">App retention lift (D30 &amp; D90)</div><div style="font-size:11px;color:#aaa;margin-top:2px;">Community vs non-community users</div></div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:13px;justify-content:center;">
+        <div class="cl"><div class="ct">Parent Connections Made</div><div class="cb">Meaningful peer connections — DMs, cohort memberships, event introductions. Key community health proxy.</div></div>
+        <div class="cl"><div class="ct">Content Contribution Rate</div><div class="cb">% of members who post, comment, or share at least once/month. Measures community vitality.</div></div>
+        <div class="cl"><div class="ct">Event Repeat Attendance</div><div class="cb">% of attendees who come to multiple events. Measures stickiness of the events program.</div></div>
+      </div>
+    </div>
+    <div class="snum" style="color:rgba(26,26,46,0.2);">09 / 10</div>
+  </div>
+</div>
+
+<!-- ───────── SLIDE 10: WHY WIN ───────── -->
+<div class="slide">
+  <div class="inner s-dark" style="justify-content:flex-start;padding-top:68px;">
+    <div class="orb" style="right:-80px;top:-80px;width:420px;height:420px;background:radial-gradient(circle,rgba(200,151,58,0.12) 0%,transparent 70%);"></div>
+    <div class="lbl">The Closing Argument</div>
+    <h2 class="hd" style="margin-bottom:26px;">Why <em>Leap Scholar</em> wins</h2>
+    <div class="g4" style="margin-bottom:26px;">
+      <div class="wc"><div class="wt">Only integrated platform</div><div class="wb">Counseling + community + events under one roof. No competitor offers this full stack. The moat is vertical integration.</div></div>
+      <div class="wc"><div class="wt">Trust is the product</div><div class="wb">High-end parents trust peer networks above all else. The community is not a feature — it's the core value proposition.</div></div>
+      <div class="wc"><div class="wt">Virality built-in</div><div class="wb">Every satisfied parent brings 2–3 more. Community-led growth is the most efficient CAC reduction available.</div></div>
+      <div class="wc"><div class="wt">Lifecycle lock-in</div><div class="wb">From shortlisting to landing abroad — 18 to 24 months of deep engagement. No channel comes close to this touchpoint density.</div></div>
+    </div>
+    <div class="qb">
+      <p>"Let's build the community that every abroad-aspiring family calls home."</p>
+    </div>
+    <div class="gbar"></div>
+    <div class="snum">10 / 10</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<div id="nav">
+  <button class="nb" onclick="go(-1)">← Prev</button>
+  <span id="ctr">1 / 10</span>
+  <button class="nb" onclick="go(1)">Next →</button>
+</div>
+
+<script>
+  let cur = 0;
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+
+  // Build journey arc
+  const stages = [
+    ['Awareness','Exploring destinations & schools'],
+    ['Shortlisting','Comparing programs & costs'],
+    ['Application','Essays, LORs, deadlines'],
+    ['Visa','Documents, interviews, waiting'],
+    ['Pre-Departure','Housing, forex, what to pack'],
+    ['Landed','Alumni network kicks in']
+  ];
+  document.getElementById('arc').innerHTML = stages.map((s,i) => `
+    <div class="ai">
+      <div class="an" style="background:rgba(200,151,58,${(0.12+i*0.11).toFixed(2)})">${i+1}</div>
+      <div><div class="ati">${s[0]}</div><div class="as">${s[1]}</div></div>
+    </div>`).join('');
+
+  function updateUI() {
+    document.getElementById('ctr').textContent = `${cur+1} / ${total}`;
+    document.getElementById('slide-lbl').textContent = `SLIDE ${cur+1} OF ${total}`;
+    document.getElementById('pbar').style.width = `${((cur+1)/total)*100}%`;
+  }
+
+  function go(dir) {
+    slides[cur].classList.remove('active');
+    cur = (cur + dir + total) % total;
+    slides[cur].classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateUI();
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') go(-1);
+  });
+
+  updateUI();
+</script>
+</body>
+</html>
